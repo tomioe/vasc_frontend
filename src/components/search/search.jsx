@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Form, Container, Jumbotron, Row } from 'react-bootstrap'
+import { Form, Container, Jumbotron, Row, Spinner } from 'react-bootstrap'
 import { useHistory } from 'react-router-dom';
 
 import ProductCard from '../product-card/product-card'
@@ -15,6 +15,7 @@ export default function Search() {
     // Initial state for "query" and "API" objects
     const [query, setQuery] = useState(searchQuery);
     const [products, setProducts] = useState([]);
+    const [isSearching, setIsSearching] = useState(false);
 
     // Create reference for Search Input
     const focusSearch = useRef(null);
@@ -57,7 +58,6 @@ export default function Search() {
     useEffect(() => {
         let currentQuery = true;
         const controller = new AbortController();
-
         const loadProducts = async () => {
             if (!query)
                 return setProducts([]);
@@ -68,11 +68,16 @@ export default function Search() {
             })
 
             await sleep(350);
+            
             if (currentQuery) {
+                setIsSearching(true);
                 const products = await getProducts(query, controller);
                 setProducts(products);
+                setIsSearching(false);
             }
+            
         }
+        
         loadProducts();
 
         return () => {
@@ -87,6 +92,7 @@ export default function Search() {
     return (
         <>
             <Jumbotron fluid>
+                
                 <Form id="search-form">
                     <h4>Product Search</h4>
                     <Form.Control
@@ -96,6 +102,7 @@ export default function Search() {
                         onChange={(e) => setQuery(e.target.value)}
                         value={query}
                     />
+                    <Spinner animation="border" variant="primary" className={!isSearching && "invisible"} />
                 </Form>
                 <Container fluid>
                     <Row>
