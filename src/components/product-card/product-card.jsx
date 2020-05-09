@@ -11,10 +11,12 @@ export default function ProductCard(props) {
         window.enableHolder();
     }, []);
 
+
+    // <img src={require('./logo.jpeg')} />
     return (
         <Card style={{ width: '20rem', margin: '0.5rem' }}>
             <a href={'/product/' + props.product["_id"]}>
-                <Card.Img className="ProductCard" variant="top" data-src="holder.js/100px280" />
+                <Card.Img className="ProductImage" variant="top" data-src="holder.js/100px280" />
             </a>
             <Card.Body>
                 <Card.Title><b>{props.product["name"]}</b></Card.Title>
@@ -22,7 +24,7 @@ export default function ProductCard(props) {
                     <Col>{props.product["prices"][0]["vendor"]}</Col>
                     <Col className="text-right">
                         <a href={'/product/' + props.product["_id"]}>
-                            {props.product["prices"][0]["price"]} DKK
+                            {props.product["prices"][0]["price"]}
                         </a>
                     </Col>
                 </Row>

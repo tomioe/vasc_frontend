@@ -34,6 +34,9 @@ export default function Search() {
         }).catch((e) => {
             console.log("Network error during API request.")
         });
+        if(!request) {
+            return null;
+        }
         const productData = await request.json();
         return productData;
     }
@@ -72,7 +75,13 @@ export default function Search() {
             if (currentQuery) {
                 setIsSearching(true);
                 const products = await getProducts(query, controller);
-                setProducts(products);
+                if(products) 
+                    setProducts(products);
+                else {
+                    // good time to show a modal, or call out an error  
+                    // https://react-bootstrap.github.io/components/alerts/
+                    setProducts([]);
+                }
                 setIsSearching(false);
             }
             
@@ -86,25 +95,24 @@ export default function Search() {
         }
     }, [query, history]);
 
-
+    
 
     // RENDER COMPONENT
     return (
         <>
             <Jumbotron fluid>
-                
-                <Form id="search-form">
+                <Form id="search-form" onSubmit={(e) => e.preventDefault()}>
                     <h4>Product Search</h4>
                     <Form.Control
-                        required
                         placeholder="Enter product name..."
                         ref={focusSearch}
                         onChange={(e) => setQuery(e.target.value)}
                         value={query}
+                        disabled={isSearching}
                     />
                     <Spinner animation="border" variant="primary" className={!isSearching && "invisible"} />
                 </Form>
-                <Container fluid>
+                <Container>
                     <Row>
                         {productComponents}
                     </Row>
