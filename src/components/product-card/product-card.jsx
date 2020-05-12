@@ -23,7 +23,7 @@ export default function ProductCard(props) {
                 <Row style={{ marginBottom: '1rem' }}>
                     <Col>{props.product["prices"][0]["vendor"]}</Col>
                     <Col className="text-right">
-                        <a href={'/product/' + props.product["_id"]}>
+                        <a href={props.product["prices"][0]["link"]}>
                             {props.product["prices"][0]["price"]}
                         </a>
                     </Col>
