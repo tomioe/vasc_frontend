@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 
 import ProductCard from '../product-card/product-card'
 
-import API_BASE_URL from '../../shared/apiConfiguration'
+import {API_BASE_URL} from '../../shared/apiConfiguration'
 
 export default function Search() {
     // Extract the "q" URL parameter

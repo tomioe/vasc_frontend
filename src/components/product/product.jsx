@@ -1,17 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import {
-    Switch,
-    Route,
-    useRouteMatch,
-    useParams,
-} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Switch, Route, useRouteMatch, useParams } from "react-router-dom";
+import { Container, Jumbotron,  Spinner, Table } from "react-bootstrap"
 
-import { Container, Jumbotron, Row, Spinner, Table } from 'react-bootstrap'
+import AdaptiveImage from 'react-adaptive-image';
 
 export default function Product() {
     let match = useRouteMatch();
 
-    // enable 'holder.js'
+    // enable "holder.js"
     useEffect(() => {
         window.enableHolder();
     }, []);
@@ -39,19 +35,19 @@ export default function Product() {
 function ProductEntry() {
 
     let { productId } = useParams();
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading] = useState(true);
 
     const dummyData = [
         {
             name: "Mod1",
             prices: [
-                {vendor: 'Vendor1', price: '1234', link: 'http://www.vendor1.com/store/items/mod1'},
-                {vendor: 'Vendor2', price: '1234', link: 'http://www.vendor2.com/product?id=mod1'},
-            ]
+                {vendor: "Vendor1", price: "1234", link: "http://www.vendor1.com/store/items/mod1"},
+                {vendor: "Vendor2", price: "1234", link: "http://www.vendor2.com/product?id=mod1"},
+            ],
+            imageName:"37d35cb4928a1ed4083e501cf92ce4b384f86ae92bee945da3184abb9d6eafb8.jpg"
         }
     ]
     let productRows = dummyData[0]["prices"].map((priceEntry, index) => {
-        console.log(priceEntry)
         return ( 
             <tr>
                 <td key={index}><a href={priceEntry.link}>{priceEntry.vendor}</a></td>
@@ -60,12 +56,17 @@ function ProductEntry() {
         )
     })
 
+    
+
     return (
         <>
             <Jumbotron>
                 <Container id="product-container">
                     <Spinner animation="border" variant="primary" className={!isLoading && "invisible"} />
-                    <img className="ProductImage" src="holder.js/100px280" alt={"Product of " + productId} />
+                    <br />
+                    {/* <img className="ProductImage" src={safeImage(dummyData[0], "280")} alt={"Product of " + productId} /> */}
+                    {/* https://www.npmjs.com/package/react-responsive-image */}
+                    {/* <AdaptiveImage className="product-image" fileName={dummyData[0]["imageName"]} /> */}
                     <p><b>Requested product ID: {productId}</b></p>
                     <Table striped bordered hover variant="dark">
                         <thead>

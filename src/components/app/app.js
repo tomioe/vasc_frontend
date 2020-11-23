@@ -6,17 +6,12 @@ import './app.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
-
 import Search from '../search/search'
 import Product from '../product/product'
 import NavSearch from '../navsearch/navsearch'
 
 
-
-
 export default function App() {
-    
-
     return (
         <Router>
             <div>
@@ -29,8 +24,6 @@ export default function App() {
                     </Nav>
                     <NavSearch />
                 </Navbar>
-
-
 
                 <Switch>
                     <Route path="/search">
