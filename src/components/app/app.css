@@ -33,10 +33,17 @@ code {
   text-align: center;
   width: 50%;
   padding: 1%;
-  border: 1px solid red;
+  /* border: 1px solid red; */
 }
 
 #product-image {
   width: 100%;
   display: block;
+}
+
+#product-container button {
+  font-weight: bold;
+  border: 2px solid #000;
+  background: #fff;
+  padding: 15px;
 }

@@ -19,7 +19,7 @@ export default function ProductCard(props) {
                 <Card.Img className="ProductImage" variant="top" data-src="holder.js/100px280" />
             </a>
             <Card.Body>
-                <Card.Title><b>{props.product["name"]}</b></Card.Title>
+                <Card.Title><a href={'/product/' + props.product["_id"]}><b>{props.product["name"]}</b></a></Card.Title>
                 <Row style={{ marginBottom: '1rem' }}>
                     <Col>{props.product["prices"][0]["vendor"]}</Col>
                     <Col className="text-right">

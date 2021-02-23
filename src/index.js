@@ -7,10 +7,16 @@ import { initImages } from 'react-adaptive-image'
 
 import { API_BASE_URL } from './shared/apiConfiguration'
 
+export let imageSettings
+
 initImages({
-  imageResolver: function(image){
-    console.log('width:' + image.width)
-      return `${API_BASE_URL}/image/${image.fileName}/?w=${image.width}`
+  imageResolver: function (image) {
+    //console.log('width:' + image.width)
+    return `${API_BASE_URL}/image/${image.fileName}?w=${image.width}`
+  },
+  imageSettings: {
+    noWidthReplacementSize: 100,
+    maxWidth: 500
   }
 });
 

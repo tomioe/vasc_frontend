@@ -26,13 +26,13 @@ export default function Search() {
     }, []);
 
     // Helper function for retrieving API data
-    const getProducts = async (query) => {
+    const searchProducts = async (query) => {
         const request = await fetch(`${API_BASE_URL}/search?q=${query}`, {
             headers: {
                 'accept': 'application/json'
             }
         }).catch((e) => {
-            console.log("Network error during API request.")
+            console.log("[VASC] Network error during API 'search' request.")
         });
         if(!request) {
             return null;
@@ -47,7 +47,6 @@ export default function Search() {
     }
 
     // Helper function to list products
-    // TODO: Implement with Cards instead, https://react-bootstrap.github.io/components/cards/
     let productComponents = products.map((product, index) => {
         return (
             <ProductCard product={product} key={index} />   
@@ -74,7 +73,7 @@ export default function Search() {
             
             if (currentQuery) {
                 setIsSearching(true);
-                const products = await getProducts(query, controller);
+                const products = await searchProducts(query, controller);
                 if(products) 
                     setProducts(products);
                 else {

@@ -3,9 +3,7 @@ import { Form, Button } from 'react-bootstrap'
 import { useHistory, useLocation } from 'react-router-dom';
 
 
-
 export default function NavSearch() {
-    
     const [searchTerm, setsearchTerm] = useState('');
     const [hideSearchBar, setHideSearchBar] = useState(false);
 

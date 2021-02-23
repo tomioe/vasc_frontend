@@ -1,86 +1,106 @@
-import React, { useEffect, useState } from "react";
-import { Switch, Route, useRouteMatch, useParams } from "react-router-dom";
-import { Container, Jumbotron,  Spinner, Table } from "react-bootstrap"
-
+import React, { useState, useEffect } from "react"
+import { useHistory, useRouteMatch } from "react-router-dom";
+import { Card, Container, Jumbotron, Spinner, Table } from "react-bootstrap"
 import AdaptiveImage from 'react-adaptive-image';
 
-export default function Product() {
-    let match = useRouteMatch();
-
-    // enable "holder.js"
-    useEffect(() => {
-        window.enableHolder();
-    }, []);
+import { API_BASE_URL } from '../../shared/apiConfiguration'
 
 
-    return (
-        <div>
+const Product = () => {
+  // enable "holder.js"
+  useEffect(() => {
+    window.enableHolder();
+  }, []);
 
-            {/* The Product page has its own <Switch> with more routes
-          that build on the /product URL path. You can think of the
-          2nd <Route> here as an "index" page for all products, or
-          the page that is shown when no product is selected */}
-            <Switch>
-                <Route path={`${match.path}/:productId`}>
-                    <ProductEntry />
-                </Route>
-                <Route path={match.path}>
-                    <h3>Invalid product ID.</h3>
-                </Route>
-            </Switch>
-        </div>
-    );
-}
+  let pageHistory = useHistory();
 
-function ProductEntry() {
+  // extract the product ID
+  let urlMatch = useRouteMatch('/product/:productId');
+  let urlProductId = urlMatch.params.productId;
 
-    let { productId } = useParams();
-    const [isLoading] = useState(true);
+  const [product, setProduct] = useState({});
+  const [productPrices, setProductPrices] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
 
-    const dummyData = [
-        {
-            name: "Mod1",
-            prices: [
-                {vendor: "Vendor1", price: "1234", link: "http://www.vendor1.com/store/items/mod1"},
-                {vendor: "Vendor2", price: "1234", link: "http://www.vendor2.com/product?id=mod1"},
-            ],
-            imageName:"37d35cb4928a1ed4083e501cf92ce4b384f86ae92bee945da3184abb9d6eafb8.jpg"
+
+  // Helper function for retrieving API data
+  const getProduct = async (query) => {
+    const request = await fetch(`${API_BASE_URL}/product/${urlProductId}`, {
+      headers: {
+        'accept': 'application/json'
+      }
+    }).catch((e) => {
+      console.log("[VASC] Network error during API 'product' request.")
+    });
+    if (!request) {
+      return null;
+    }
+    const productData = await request.json();
+    return productData;
+  }
+
+
+  useEffect(() => {
+    const loadProduct = async () => {
+      setIsSearching(true);
+      const apiProduct = await getProduct(urlProductId);
+      if (apiProduct) {
+        setProduct(apiProduct[0]);
+        //&console.log(apiProduct[0]);
+        if (apiProduct[0]["prices"]) {
+          setProductPrices(apiProduct[0]["prices"])
         }
-    ]
-    let productRows = dummyData[0]["prices"].map((priceEntry, index) => {
-        return ( 
-            <tr>
-                <td key={index}><a href={priceEntry.link}>{priceEntry.vendor}</a></td>
-                <td key={index}><a href={priceEntry.link}>{priceEntry.price}</a></td>
-            </tr>
-        )
-    })
+      } else {
+        // good time to show a modal, or call out an error  
+        // https://react-bootstrap.github.io/components/alerts/
+        setProduct([]);
+      }
+      setIsSearching(false);
+    }
+    loadProduct();
+  }, [urlProductId]);
 
-    
-
+  // Helper function to render product data
+  let productImage = product["imageName"] ?
+      <AdaptiveImage width={200} className="product-image" fileName={product["imageName"]} />
+    : <Card.Img className="ProductImage" variant="top" data-src="holder.js/100px280" />;
+  let productTable = productPrices.map((priceEntry, index) => {
     return (
-        <>
-            <Jumbotron>
-                <Container id="product-container">
-                    <Spinner animation="border" variant="primary" className={!isLoading && "invisible"} />
-                    <br />
-                    {/* <img className="ProductImage" src={safeImage(dummyData[0], "280")} alt={"Product of " + productId} /> */}
-                    {/* https://www.npmjs.com/package/react-responsive-image */}
-                    {/* <AdaptiveImage className="product-image" fileName={dummyData[0]["imageName"]} /> */}
-                    <p><b>Requested product ID: {productId}</b></p>
-                    <Table striped bordered hover variant="dark">
-                        <thead>
-                            <tr>
-                                <th>Vendor Name</th>
-                                <th>Price</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {productRows}
-                        </tbody>
-                    </Table>
-                </Container>
-            </Jumbotron>
-        </>
-    );
-}
+      <tr key={index}>
+        <td><a href={priceEntry.link}>{priceEntry.vendor}</a></td>
+        <td><a href={priceEntry.link}>{priceEntry.price}</a></td>
+      </tr>
+    )
+  })
+
+  return (
+    <>
+      <Jumbotron>
+        <Container id="product-container" className={isSearching && "invisible"}>
+          <Spinner animation="border" variant="primary" className={!isSearching && "invisible"} />
+          <h2>{product["name"]}</h2>
+          <br />
+          {/* <p><b>Requested product ID: {urlProductId}</b></p> */}
+          {productImage}
+          <br />
+          <br />
+          <Table striped bordered hover variant="light">
+            <thead>
+              <tr>
+                <th>Vendor Name</th>
+                <th>Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              {productTable}
+            </tbody>
+          </Table>
+          <br />
+          <button onClick={() => pageHistory.goBack()} className={pageHistory.length>1 ? undefined : "invisible"} >Back</button> 
+        </Container>
+      </Jumbotron>
+    </>
+  );
+};
+
+export default Product;
