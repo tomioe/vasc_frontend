@@ -3,6 +3,7 @@ import { useHistory, useRouteMatch } from "react-router-dom";
 import { Card, Container, Jumbotron, Spinner, Table } from "react-bootstrap"
 import AdaptiveImage from 'react-adaptive-image';
 
+import { redirectToClickURL } from '../../shared/clickURL'
 import { API_BASE_URL } from '../../shared/apiConfiguration'
 
 
@@ -39,6 +40,8 @@ const Product = () => {
     return productData;
   }
 
+  
+
 
   useEffect(() => {
     const loadProduct = async () => {
@@ -64,12 +67,13 @@ const Product = () => {
   let productImage = product["imageName"] ?
       <AdaptiveImage width={200} className="product-image" fileName={product["imageName"]} />
     : <Card.Img className="ProductImage" variant="top" data-src="holder.js/100px280" />;
-    
+
+  
   let productTable = productPrices.map((priceEntry, index) => {
     return (
       <tr key={index}>
-        <td><a href={priceEntry.link}>{priceEntry.vendor}</a></td>
-        <td><a href={priceEntry.link}>{priceEntry.price}</a></td>
+        <td><a href={priceEntry.link} onClick={(e) => {redirectToClickURL(e, priceEntry.link)}}>{priceEntry.vendor}</a></td>
+        <td><a href={priceEntry.link} onClick={(e) => {redirectToClickURL(e, priceEntry.link)}}>{priceEntry.price}</a></td>
       </tr>
     )
   })

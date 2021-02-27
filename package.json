@@ -14,6 +14,7 @@
     "react-dom": "^16.14.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
+    "safer-buffer": "^2.1.2",
     "serve": "^11.3.2"
   },
   "scripts": {
