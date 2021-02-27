@@ -9,6 +9,8 @@ import { API_BASE_URL } from './shared/apiConfiguration'
 
 export let imageSettings
 
+console.log(`Starting application with API URL = ${API_BASE_URL}`)
+
 initImages({
   imageResolver: function (image) {
     //console.log('width:' + image.width)
