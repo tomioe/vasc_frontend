@@ -64,6 +64,7 @@ const Product = () => {
   let productImage = product["imageName"] ?
       <AdaptiveImage width={200} className="product-image" fileName={product["imageName"]} />
     : <Card.Img className="ProductImage" variant="top" data-src="holder.js/100px280" />;
+    
   let productTable = productPrices.map((priceEntry, index) => {
     return (
       <tr key={index}>
