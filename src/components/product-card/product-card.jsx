@@ -23,7 +23,8 @@ export default function ProductCard(props) {
     return (
         <Card style={{ width: '20rem', margin: '0.5rem' }}>
             <a href={'/product/' + props.product["_id"]}>
-                {determineImageSrc(props.product["imageName"])}
+                {/* {determineImageSrc(props.product["imageName"])*/}
+                <Card.Img className="ProductImage" variant="top" data-src="holder.js/100px280" />
             </a>
             <Card.Body>
                 <Card.Title><a href={'/product/' + props.product["_id"]}><b>{props.product["name"]}</b></a></Card.Title>
