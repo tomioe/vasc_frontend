@@ -2,8 +2,8 @@ import React, { useEffect } from 'react';
 import { Button, Card, Row, Col } from 'react-bootstrap'
 import { useHistory } from "react-router-dom";
 
-import AdaptiveImage from 'react-adaptive-image';
-import { redirectToClickURL } from '../../shared/clickURL'
+// import AdaptiveImage from 'react-adaptive-image';
+import { redirectToClickURL } from '../shared/clickURL'
 
 export default function ProductCard(props) {
 
@@ -14,12 +14,12 @@ export default function ProductCard(props) {
 
     // sometimes we get an image from the server. helper function to determine
     // whether we need a placeholder, or can load the image as is
-    const determineImageSrc = (dataSrc) => {
-        // dataSrc = false;
-        return dataSrc ? <AdaptiveImage width={300} className="card-img-top"  variant="top" fileName={props.product["imageName"]} /> : <Card.Img className="ProductImage" variant="top" data-src="holder.js/100px280" />
-    }
+    // TODO: Would be nice to show images without a watermark...
+    // const determineImageSrc = (dataSrc) => {
+    //     // dataSrc = false;
+    //     return dataSrc ? <AdaptiveImage width={300} className="card-img-top"  variant="top" fileName={props.product["imageName"]} /> : <Card.Img className="ProductImage" variant="top" data-src="holder.js/100px280" />
+    // }
 
-    // <img src={require('./logo.jpeg')} />
     return (
         <Card style={{ width: '20rem', margin: '0.5rem' }}>
             <a href={'/product/' + props.product["_id"]}>

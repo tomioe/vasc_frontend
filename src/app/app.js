@@ -6,9 +6,9 @@ import './app.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
-import Search from '../search/search'
-import Product from '../product/product'
-import NavSearch from '../navsearch/navsearch'
+import Search from '../pages/search'
+import Product from '../pages/product'
+import NavSearch from '../components/nav-search'
 
 
 export default function App() {

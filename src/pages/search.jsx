@@ -1,24 +1,34 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Form, Container, Jumbotron, Row, Spinner } from 'react-bootstrap'
+import { Form, Container, Jumbotron, Row, Spinner, ToggleButton } from 'react-bootstrap'
 import { useHistory } from 'react-router-dom';
 
-import ProductCard from '../product-card/product-card'
+import ProductCard from '../components/product-card'
+import ModalComponent from '../components/modal-comp'
 
-import {API_BASE_URL} from '../../shared/apiConfiguration'
+import { API_BASE_URL } from '../shared/apiConfiguration'
 
 export default function Search() {
     // Extract the "q" URL parameter
     let urlParameters = window.location.search;
     let parsedParameters = new URLSearchParams(urlParameters);
     let searchQuery = parsedParameters.get('q') || '';
-    
-    // Initial state for "query" and "API" objects
+
+    // Initial state for API query, product, searching and modal hooks
     const [query, setQuery] = useState(searchQuery);
     const [products, setProducts] = useState([]);
     const [isSearching, setIsSearching] = useState(false);
+    const [modalShowing, setModalShowing] = useState(false);
+    const [modalData, setModalData] = useState([]);
+    const [simOffline, setSimOffline] = useState((localStorage.getItem('offlineSim')==='true') || false);
 
     // Create reference for Search Input
     const focusSearch = useRef(null);
+
+    
+    // helper methods to ease modal handling
+    const handleCloseModal = () => setModalShowing(false);
+    const handleShowModal = () => setModalShowing(true);
+    
 
     // Focus on Search Input
     useEffect(() => {
@@ -32,9 +42,14 @@ export default function Search() {
                 'accept': 'application/json'
             }
         }).catch((e) => {
+            setModalData({
+                title: 'API Error',
+                body: 'API Response resulted in an error during "search" lookup.'
+            });
+            handleShowModal();
             console.log("[VASC] Network error during API 'search' request.")
         });
-        if(!request) {
+        if (!request) {
             return null;
         }
         const productData = await request.json();
@@ -49,7 +64,7 @@ export default function Search() {
     // Helper function to list products
     let productComponents = products.map((product, index) => {
         return (
-            <ProductCard product={product} key={index} />   
+            <ProductCard product={product} key={index} />
         )
     })
 
@@ -63,29 +78,35 @@ export default function Search() {
         const loadProducts = async () => {
             if (!query)
                 return setProducts([]);
-            
+
             history.push({
                 pathname: '/search',
-                search: '?q='+query
+                search: '?q=' + query
             })
 
             await sleep(350);
-            
+
             if (currentQuery) {
                 setIsSearching(true);
-                const products = await searchProducts(query, controller);
-                if(products) 
+                let products = await searchProducts(query, controller);
+                if (simOffline)
+                    products = null;
+                if (products)
                     setProducts(products);
                 else {
-                    // good time to show a modal, or call out an error  
-                    // https://react-bootstrap.github.io/components/alerts/
+                    // good time to show a modal
+                    setModalData({
+                        title: 'API Error',
+                        body: 'Unable to parse API search response.'
+                    })
+                    handleShowModal();
                     setProducts([]);
                 }
                 setIsSearching(false);
             }
-            
+
         }
-        
+
         loadProducts();
 
         return () => {
@@ -94,14 +115,36 @@ export default function Search() {
         }
     }, [query, history]);
 
-    
+    // we store the state for the api debugging
+    useEffect(() => {
+        localStorage.setItem('offlineSim', simOffline);
+    }, [simOffline]);
+    const handleSim = (e) => {
+        localStorage.setItem('offlineSim', e.currentTarget.checked)
+        setSimOffline(e.currentTarget.checked);
+    }
 
-    // RENDER COMPONENT
+
     return (
         <>
+            <ModalComponent
+                show={modalShowing}
+                handleClose={handleCloseModal}
+                title={modalData.title}
+                body={modalData.body}
+            />
             <Jumbotron fluid>
                 <Form id="search-form" onSubmit={(e) => e.preventDefault()}>
                     <h4>Product Search</h4>
+                    <ToggleButton
+                        type="checkbox"
+                        variant="secondary"
+                        checked={simOffline}
+                        value="1"
+                        onChange={(e) => handleSim(e)}
+                    >
+                        API Offline
+                    </ToggleButton>
                     <Form.Control
                         placeholder="Enter product name..."
                         ref={focusSearch}

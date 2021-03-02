@@ -3,8 +3,10 @@ import { useHistory, useRouteMatch } from "react-router-dom";
 import { Card, Container, Jumbotron, Spinner, Table } from "react-bootstrap"
 import AdaptiveImage from 'react-adaptive-image';
 
-import { redirectToClickURL } from '../../shared/clickURL'
-import { API_BASE_URL } from '../../shared/apiConfiguration'
+import ModalComponent from '../components/modal-comp'
+
+import { redirectToClickURL } from '../shared/clickURL'
+import { API_BASE_URL } from '../shared/apiConfiguration'
 
 
 const Product = () => {
@@ -22,15 +24,26 @@ const Product = () => {
   const [product, setProduct] = useState({});
   const [productPrices, setProductPrices] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
+  const [modalShowing, setModalShowing] = useState(false);
+  const [modalData, setModalData] = useState([]);
 
+
+  // helper methods to ease modal handling
+  const handleCloseModal = () => setModalShowing(false);
+  const handleShowModal = () => setModalShowing(true);
 
   // Helper function for retrieving API data
-  const getProduct = async (query) => {
+  const getProduct = async () => {
     const request = await fetch(`${API_BASE_URL}/product/${urlProductId}`, {
       headers: {
         'accept': 'application/json'
       }
     }).catch((e) => {
+      setModalData({
+        title: 'API Error',
+        body: 'API Response resulted in an error during "product" lookup.'
+      });
+      handleShowModal();
       console.log("[VASC] Network error during API 'product' request.")
     });
     if (!request) {
@@ -40,13 +53,10 @@ const Product = () => {
     return productData;
   }
 
-  
-
-
   useEffect(() => {
     const loadProduct = async () => {
       setIsSearching(true);
-      const apiProduct = await getProduct(urlProductId);
+      const apiProduct = await getProduct();
       if (apiProduct) {
         setProduct(apiProduct[0]);
         //&console.log(apiProduct[0]);
@@ -55,7 +65,11 @@ const Product = () => {
         }
       } else {
         // good time to show a modal, or call out an error  
-        // https://react-bootstrap.github.io/components/alerts/
+        setModalData({
+          title: 'API Error',
+          body: 'Unable to parse API product response.'
+        })
+        handleShowModal();
         setProduct([]);
       }
       setIsSearching(false);
@@ -80,6 +94,12 @@ const Product = () => {
 
   return (
     <>
+      <ModalComponent
+        show={modalShowing}
+        handleClose={handleCloseModal}
+        title={modalData.title}
+        body={modalData.body}
+      />
       <Jumbotron>
         <Container id="product-container" className={isSearching && "invisible"}>
           <Spinner animation="border" variant="primary" className={!isSearching && "invisible"} />
