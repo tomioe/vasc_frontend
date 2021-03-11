@@ -67,7 +67,7 @@ const Product = () => {
         // good time to show a modal, or call out an error  
         setModalData({
           title: 'API Error',
-          body: 'Unable to parse API product response.'
+          body: 'API product request failed.'
         })
         handleShowModal();
         setProduct([]);
@@ -79,15 +79,15 @@ const Product = () => {
 
   // Helper function to render product data
   let productImage = product["imageName"] ?
-      <AdaptiveImage width={200} className="product-image" fileName={product["imageName"]} />
+      <AdaptiveImage width={300} fileName={product["imageName"]} />
     : <Card.Img className="ProductImage" variant="top" data-src="holder.js/100px280" />;
 
   
-  let productTable = productPrices.map((priceEntry, index) => {
+  let productTable = productPrices.map((priceData, index) => {
     return (
       <tr key={index}>
-        <td><a href={priceEntry.link} onClick={(e) => {redirectToClickURL(e, priceEntry.link)}}>{priceEntry.vendor}</a></td>
-        <td><a href={priceEntry.link} onClick={(e) => {redirectToClickURL(e, priceEntry.link)}}>{priceEntry.price}</a></td>
+        <td><a href={priceData.link} onClick={(e) => {redirectToClickURL(e, priceData.link)}}>{priceData.vendor}</a></td>
+        <td><a href={priceData.link} onClick={(e) => {redirectToClickURL(e, priceData.link)}}>{priceData.price}</a></td>
       </tr>
     )
   })
@@ -101,12 +101,14 @@ const Product = () => {
         body={modalData.body}
       />
       <Jumbotron>
-        <Container id="product-container" className={isSearching && "invisible"}>
+        <Container id="product-spinner-containter">
           <Spinner animation="border" variant="primary" className={!isSearching && "invisible"} />
+        </Container>
+        <Container id="product-container" className={isSearching && "invisible"}>
           <h2>{product["name"]}</h2>
           <br />
           {/* <p><b>Requested product ID: {urlProductId}</b></p> */}
-          {productImage}
+          { productImage }
           <br />
           <br />
           <Table striped bordered hover variant="light">
@@ -117,11 +119,11 @@ const Product = () => {
               </tr>
             </thead>
             <tbody>
-              {productTable}
+              { productTable }
             </tbody>
           </Table>
           <br />
-          <button onClick={() => pageHistory.goBack()} className={pageHistory.length>1 ? undefined : "invisible"} >Back</button> 
+          <button onClick={() => pageHistory.goBack()} className={pageHistory.length>1 ? undefined : "invisible"}>Back</button> 
         </Container>
       </Jumbotron>
     </>

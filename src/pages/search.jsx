@@ -7,6 +7,8 @@ import ModalComponent from '../components/modal-comp'
 
 import { API_BASE_URL } from '../shared/apiConfiguration'
 
+
+
 export default function Search() {
     // Extract the "q" URL parameter
     let urlParameters = window.location.search;
@@ -28,6 +30,7 @@ export default function Search() {
     // helper methods to ease modal handling
     const handleCloseModal = () => setModalShowing(false);
     const handleShowModal = () => setModalShowing(true);
+    
     
 
     // Focus on Search Input
@@ -150,7 +153,7 @@ export default function Search() {
                         ref={focusSearch}
                         onChange={(e) => setQuery(e.target.value)}
                         value={query}
-                        disabled={isSearching}
+                        // disabled={isSearching}
                     />
                     <Spinner animation="border" variant="primary" className={!isSearching && "invisible"} />
                 </Form>

@@ -36,9 +36,8 @@ code {
   /* border: 1px solid red; */
 }
 
-#product-image {
-  width: 100%;
-  display: block;
+#product-spinner-containter {
+  text-align: center;
 }
 
 #product-container button {
