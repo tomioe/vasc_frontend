@@ -4,10 +4,15 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import './app.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import "@fortawesome/fontawesome-free/css/all.min.css";
 
+
+// import "../assets/css/animate.min.css";
+// import "../assets/css/demo.css";
 
 import Search from '../pages/search'
 import Product from '../pages/product'
+import DashBoard from '../pages/dashboard-test'
 import NavSearch from '../components/nav-search'
 
 
@@ -20,7 +25,7 @@ export default function App() {
                     <Nav className="mr-auto">
                         <Nav.Link href="/">Home</Nav.Link>
                         <Nav.Link href="/search">Search</Nav.Link>
-                        <Nav.Link href="/admin">Admin</Nav.Link>
+                        <Nav.Link href="/stats">Dashboard</Nav.Link>
                     </Nav>
                     <NavSearch />
                 </Navbar>
@@ -28,6 +33,9 @@ export default function App() {
                 <Switch>
                     <Route path="/search">
                         <Search />
+                    </Route>
+                    <Route path="/stats">
+                        <DashBoard />
                     </Route>
                     <Route path="/product">
                         <Product />

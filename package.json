@@ -3,18 +3,23 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.15.2",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "bootstrap": "^4.6.0",
+    "chartist": "^0.11.4",
     "holderjs": "^2.9.9",
+    "node-sass": "^5.0.0",
     "react": "^16.14.0",
     "react-adaptive-image": "^1.8.0",
-    "react-bootstrap": "^1.5.0",
+    "react-bootstrap": "^1.5.2",
+    "react-chartist": "^0.14.4",
     "react-device-detect": "^1.17.0",
     "react-dom": "^16.14.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
+    "react-svg-worldmap": "^1.1.0",
     "safer-buffer": "^2.1.2",
     "serve": "^11.3.2"
   },
@@ -23,7 +28,11 @@
     "start": "serve -s build",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "compile:scss": "node-sass src/assets/scss/light-bootstrap-dashboard-react.scss src/assets/css/light-bootstrap-dashboard-react.css",
+    "minify:scss": "node-sass src/assets/scss/light-bootstrap-dashboard-react.scss src/assets/css/light-bootstrap-dashboard-react.min.css --output-style compressed",
+    "map:scss": "node-sass src/assets/scss/light-bootstrap-dashboard-react.scss src/assets/css/light-bootstrap-dashboard-react.css --source-map true",
+    "build:scss": "npm run compile:scss && npm run minify:scss && npm run map:scss"
   },
   "eslintConfig": {
     "extends": "react-app"

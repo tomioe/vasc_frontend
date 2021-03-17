@@ -19,8 +19,8 @@ export default function Search() {
     const [query, setQuery] = useState(searchQuery);
     const [products, setProducts] = useState([]);
     const [isSearching, setIsSearching] = useState(false);
-    const [modalShowing, setModalShowing] = useState(false);
     const [modalData, setModalData] = useState([]);
+    const [modalShowing, setModalShowing] = useState(false);
     const [simOffline, setSimOffline] = useState((localStorage.getItem('offlineSim')==='true') || false);
 
     // Create reference for Search Input
