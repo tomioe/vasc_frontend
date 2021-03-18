@@ -1,19 +1,15 @@
-import React from 'react'
-import { Navbar, Nav } from 'react-bootstrap'
+import React from "react"
+import { Navbar, Nav } from "react-bootstrap"
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
-import './app.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import "@fortawesome/fontawesome-free/css/all.min.css";
+import "./app.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 
-// import "../assets/css/animate.min.css";
-// import "../assets/css/demo.css";
-
-import Search from '../pages/search'
-import Product from '../pages/product'
-import DashBoard from '../pages/dashboard-test'
-import NavSearch from '../components/nav-search'
+import Search from "../pages/search"
+import Product from "../pages/product"
+import Stats from "../pages/stats"
+import NavSearch from "../components/nav-search"
 
 
 export default function App() {
@@ -35,7 +31,7 @@ export default function App() {
                         <Search />
                     </Route>
                     <Route path="/stats">
-                        <DashBoard />
+                        <Stats />
                     </Route>
                     <Route path="/product">
                         <Product />

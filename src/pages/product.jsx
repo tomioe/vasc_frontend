@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { useHistory, useRouteMatch } from "react-router-dom";
-import { Card, Container, Jumbotron, Spinner, Table } from "react-bootstrap"
+import { Card, Container, Jumbotron, Spinner, Table, Button } from "react-bootstrap"
 import AdaptiveImage from 'react-adaptive-image';
 
 import ModalComponent from '../components/modal-comp'
@@ -123,7 +123,9 @@ const Product = () => {
             </tbody>
           </Table>
           <br />
-          <button onClick={() => pageHistory.goBack()} className={pageHistory.length>1 ? undefined : "invisible"}>Back</button> 
+          <Button onClick={() => pageHistory.goBack()} variant="primary" className={pageHistory.length>1 ? "primary" : "invisible"}>
+            Back
+          </Button> 
         </Container>
       </Jumbotron>
     </>

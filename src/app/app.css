@@ -42,7 +42,5 @@ code {
 
 #product-container button {
   font-weight: bold;
-  border: 2px solid #000;
-  background: #fff;
-  padding: 15px;
+  padding: 15px 50px;
 }
