@@ -303,7 +303,7 @@ export default function Stats() {
                         </Grid.Col>
                         <Grid.Col sm={6} lg={3}>
                             <StatsCard
-                                label="Total Products Clicked"
+                                label="Last Scrape Date"
                                 layout={3}
                                 movement={0}
                                 total={"?"}
