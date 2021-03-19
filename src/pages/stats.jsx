@@ -1,23 +1,15 @@
-import React, { useState, useEffect, useRef } from "react"
-import { Modal, Spinner, Form, Input } from "react-bootstrap"
+import React, { useState, useEffect } from "react"
+import { Modal, Form } from "react-bootstrap"
 
 import Chart from "react-apexcharts";
 import { WorldMap } from "react-svg-worldmap"
 import {
     Page,
-    Avatar,
-    Icon,
     Grid,
     Card,
-    Text,
-    Table,
-    Progress,
     Dropdown,
     Button,
-    StampCard,
     StatsCard,
-    ProgressCard,
-    Badge,
     El,
 } from "tabler-react";
 
@@ -36,6 +28,7 @@ export default function Stats() {
     const [modalData, setModalData] = useState([]);
     const [modalShowing, setModalShowing] = useState(true);
     const [passwordEntered, setPasswordEntered] = useState(false);
+    const [authDate] = useState((localStorage.getItem('authDate') || ''));
 
     // helper methods to ease modal handling
     const handleCloseModal = () => setModalShowing(false);
@@ -197,16 +190,16 @@ export default function Stats() {
         if(!stats.countryDistribution)
             return;
         let browserData = {};
-        stats.countryDistribution.map( countryEntry => {
-            const countryCode = countryEntry["code"]
-            if(!countryCode)
+        for(let i = 0; i < stats.countryDistribution.length; i++ ) {
+            const countryCode = stats.countryDistribution[i]["code"]
+            if(!countryCode || countryCode.indexOf("undef")>0)
                 return;
             if(browserData[countryCode]) {
                 browserData[countryCode] += 1;
             } else {
                 browserData[countryCode] = 1;
             }
-        });
+        }
         browserData = Object.entries(browserData).map( browserDataEntry => {
             let entry = {};
             entry["country"] = browserDataEntry[0].toLowerCase();
@@ -245,7 +238,11 @@ export default function Stats() {
             },
         };
         return ( 
-            <Chart {...pieData} />
+            <Card title="Browser Distribution">
+                <Card.Body>
+                    <Chart {...pieData} />
+                </Card.Body>
+            </Card>
         )
     }
 
@@ -253,10 +250,24 @@ export default function Stats() {
     const [inputData, setinputData] = useState("");
     let handleChange = (e) => setinputData(e.target.value)
     const modalAction = () => {};
+    useEffect(() => {
+        if(authDate && authDate.length > 0) {
+            const storedDate = new Date(authDate);
+            const dayAgo = new Date() - 1000*60*60*24;
+            if(storedDate > dayAgo) {
+                setPasswordEntered(true);
+                setModalShowing(false);
+            } else {
+                localStorage.setItem('authDate', '');
+            }
+        }
+    }, [authDate])
+
     const processPasswordText = () => {
         if(inputData === "dashboard!") {
             setPasswordEntered(true);
             setModalShowing(false);
+            localStorage.setItem('authDate', new Date());
         }
     }
 
@@ -265,11 +276,10 @@ export default function Stats() {
         <>
             <Modal show={modalShowing} onHide={modalAction}>
                 <Modal.Header >
-                    <Modal.Title>{modalData.title}</Modal.Title>
+                    <Modal.Title>Enter Password</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form.Group>
-                        <Form.Label>Password</Form.Label>
                         <Form.Control   type="password"
                                         onChange={handleChange}
                                         value={inputData}
@@ -316,12 +326,7 @@ export default function Stats() {
                             {countriesCard()}
                         </Grid.Col>
                         <Grid.Col sm={2} lg={6}>
-                            <Card title="Browser Distribution">
-                                <Card.Body>
-                                    {/* <Chart {...chartDonutData} /> */}
-                                    {browserDistributionCard()}
-                                </Card.Body>
-                            </Card>
+                            {browserDistributionCard()}
                         </Grid.Col>
                     </Grid.Row>
                 </Page.Content>
