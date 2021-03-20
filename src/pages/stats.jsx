@@ -60,7 +60,7 @@ export default function Stats() {
     useEffect(() => {
         const loadStats = async () => {
             const stats = await getStats();
-            console.log(stats)
+            //console.log(stats)
             if (stats) {
                 setStats(stats);
                 setShowStats(true);
@@ -192,7 +192,7 @@ export default function Stats() {
         let browserData = {};
         for(let i = 0; i < stats.countryDistribution.length; i++ ) {
             const countryCode = stats.countryDistribution[i]["code"]
-            if(!countryCode || countryCode.indexOf("undef")>0)
+            if(!countryCode)
                 return;
             if(browserData[countryCode]) {
                 browserData[countryCode] += 1;
